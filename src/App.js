@@ -1,10 +1,19 @@
 import "./App.css";
-
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import UserFileUpload from "./pages/UserFileUpload";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">AWS Uploader</header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/userupload" element={<UserFileUpload />} />
+        <Route path="*" element={<Navigate to="/userupload" replace />} />
+      </Routes>
+    </Router>
   );
 }
 
