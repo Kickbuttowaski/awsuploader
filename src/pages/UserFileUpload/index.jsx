@@ -8,13 +8,26 @@ const UserFileUpload = () => {
   const [fileList, setFileList] = useState([]);
   useEffect(()=>{
     const fetchList= async function(){
-        let res = await API.post("/upload/list")
+        let res = await API.get("/upload/list")
         res = await res.json()
-        setFileList(res.data)
-        console.log(res.data,"API")  
+        setFileList(res.data.map(obj=>obj.Key))
     }
     fetchList()
 },[])
+const handleFileUpload = async()=>{
+  try{
+    const formData = new FormData()
+    formData.append('file',uploadedFile.current)
+    let res = await API.post('/upload',{body:formData})
+    console.log(res,"handleFileUpload")
+    res = await res.json()
+    setFileList(prevList=>[...prevList,res.data])
+  }
+  catch(e){
+    alert("Something went wrong, Please try again")
+  }
+ 
+}
   return (
     <div className={style["upload-wrapper"]}>
       <div className={style["upload-holder"]}>
@@ -23,15 +36,21 @@ const UserFileUpload = () => {
           <FileUploader
             onChange={(e) => {
               const fileUploaded = e.target.files[0];
+              uploadedFile.current = fileUploaded
             }}
           />
-          <button>Upload</button>
+          <button onClick={handleFileUpload}>Upload</button>
         </section>
         <section className={style["upload-holder__section2"]}>
           <h4>Uploaded list</h4>
-          <ul>
-            {fileList.map((fileObj)=>{
-              return <li key={fileObj.Key}>{fileObj.Key}</li>
+          <ul onClick={(e)=>{
+            if(e.target.tagName === "LI"){
+              console.log(e.target.getAttribute('data-filename'),'onClick')
+            }
+           
+          }}>
+            {fileList.map((fileName)=>{
+              return <li data-filename={fileName} key={fileName}>{fileName}</li>
             })}
           </ul>
         </section>
