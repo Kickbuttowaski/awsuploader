@@ -1,6 +1,6 @@
 import style from "./FileUploader.module.css"
-const FileUploader = () => {
-  return <input type="file" onChange={() => {}} />;
+const FileUploader = ({onChange}) => {
+  return <input type="file" onChange={onChange} />;
 };
 
 export default FileUploader;
